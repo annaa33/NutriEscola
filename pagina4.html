@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratório de Sabores | NutriEscola</title>
+    <style>
+        :root {
+            --cor-primaria: #4CAF50;
+            --cor-secundaria: #8BC34A;
+            --cor-destaque: #FFC107;
+            --cor-alerta: #F44336;
+            --cor-texto: #333;
+            --cor-fundo: #f9f9f9;
+            --cor-cientista: #3F51B5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        /* Cabeçalho Temático */
+        .lab-header {
+            background: linear-gradient(135deg, var(--cor-cientista) 0%, var(--cor-primaria) 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .lab-title {
+            font-size: 32px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .lab-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        
+        /* Cards de Experimentos */
+        .experiments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .experiment-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 5px solid var(--cor-destaque);
+        }
+        
+        .experiment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+        
+        .experiment-image {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .experiment-content {
+            padding: 20px;
+        }
+        
+        .experiment-title {
+            color: var(--cor-cientista);
+            margin-bottom: 10px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .experiment-desc {
+            margin-bottom: 15px;
+            color: #555;
+        }
+        
+        .experiment-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: var(--cor-primaria);
+            color: white;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .experiment-btn:hover {
+            background-color: var(--cor-secundaria);
+        }
+        
+        /* Seção Científica */
+        .science-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--cor-cientista);
+        }
+        
+        .science-title {
+            color: var(--cor-cientista);
+            margin-bottom: 20px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .science-facts {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .fact-item {
+            padding: 15px;
+            background: var(--cor-fundo);
+            border-radius: 8px;
+            border-bottom: 3px solid var(--cor-destaque);
+        }
+        
+        .fact-icon {
+            font-size: 24px;
+            color: var(--cor-cientista);
+            margin-bottom: 10px;
+        }
+        
+        /* Teste de Paladar */
+        .taste-test {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .taste-test:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 150px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%234CAF50" opacity="0.1"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="8.5" cy="10.5" r="1.5"/><circle cx="15.5" cy="10.5" r="1.5"/><path d="M12 16c-1.48 0-2.75-.81-3.45-2H6.88c.8 2.05 2.79 3.5 5.12 3.5s4.32-1.45 5.12-3.5h-1.67c-.7 1.19-1.97 2-3.45 2z"/></svg>') no-repeat;
+            background-size: contain;
+        }
+        
+        .taste-title {
+            color: var(--cor-cientista);
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .taste-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .taste-option {
+            padding: 10px 20px;
+            background: white;
+            border-radius: 30px;
+            cursor: pointer;
+            border: 2px solid var(--cor-secundaria);
+            transition: all 0.3s;
+        }
+        
+        .taste-option:hover {
+            background: var(--cor-secundaria);
+            color: white;
+        }
+        
+        .taste-option.selected {
+            background: var(--cor-primaria);
+            color: white;
+            border-color: var(--cor-primaria);
+        }
+        
+        .taste-result {
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        /* Cards Nutricionais */
+        .nutrition-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .nutrition-card {
+            flex: 1;
+            min-width: 200px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            text-align: center;
+            border-top: 4px solid var(--cor-destaque);
+        }
+        
+        .nutrition-icon {
+            font-size: 40px;
+            color: var(--cor-primaria);
+            margin-bottom: 15px;
+        }
+        
+        .nutrition-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--cor-cientista);
+            margin-bottom: 5px;
+        }
+        
+        /* Curiosidades Científicas */
+        .curiosities-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            border-right: 5px solid var(--cor-destaque);
+        }
+        
+        .curiosity-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .curiosity-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .curiosity-title {
+            color: var(--cor-cientista);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        /* Botão Voltar */
+        .back-button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .back-button {
+            padding: 12px 25px;
+            background-color: var(--cor-cientista);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .back-button:hover {
+            background-color: #303F9F;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Rodapé */
+        .lab-footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .lab-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .experiments-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nutrition-cards {
+                flex-direction: column;
+            }
+        }
+        
+        /* Animações */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animated {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="lab-header animated">
+        <div>
+            <h1 class="lab-title">
+                <i class="fas fa-flask"></i> Laboratório de Sabores
+            </h1>
+            <p class="lab-subtitle">Descubra, experimente e evite o desperdício através da ciência!</p>
+        </div>
+        <img src="https://cdn-icons-png.flaticon.com/512/3149/3149017.png" alt="Cientista" style="height: 100px;">
+    </div>
+    
+    <div class="science-section animated delay-1">
+        <h2 class="science-title">
+            <i class="fas fa-microscope"></i> Ciência do Desperdício
+        </h2>
+        <p>Nosso laboratório investiga por que desperdiçamos comida e como nossos sentidos podem nos ajudar a fazer melhores escolhas. A cada experimento, você contribui para reduzir o desperdício na nossa escola!</p>
+        
+        <div class="science-facts">
+            <div class="fact-item">
+                <div class="fact-icon"><i class="fas fa-eye"></i></div>
+                <h3>Viés Visual</h3>
+                <p>60% das rejeições acontecem antes mesmo de provar, baseadas apenas na aparência.</p>
+            </div>
+            <div class="fact-item">
+                <div class="fact-icon"><i class="fas fa-tongue"></i></div>
+                <h3>Adaptação do Paladar</h3>
+                <p>Precisamos experimentar um alimento até 10 vezes antes de desenvolver o gosto por ele.</p>
+            </div>
+            <div class="fact-item">
+                <div class="fact-icon"><i class="fas fa-brain"></i></div>
+                <h3>Memória Gustativa</h3>
+                <p>Nosso cérebro associa alimentos a experiências passadas, criando preconceitos.</p>
+            </div>
+        </div>
+    </div>
+    
+    <h2 style="color: var(--cor-cientista); margin: 30px 0 20px; font-size: 24px;" class="animated delay-1">
+        <i class="fas fa-vial"></i> Experimentos em Andamento
+    </h2>
+    
+    <div class="experiments-grid">
+        <!-- Experimento 1 -->
+        <div class="experiment-card animated delay-1">
+            <div class="experiment-image" style="background-image: url('https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+            <div class="experiment-content">
+                <h3 class="experiment-title">
+                    <i class="fas fa-blind"></i> Teste Cego
+                </h3>
+                <p class="experiment-desc">Prove alimentos sem ver para descobrir seus verdadeiros preferidos, eliminando preconceitos visuais.</p>
+                <a href="#" class="experiment-btn" onclick="startExperiment('blind')">Participar</a>
+            </div>
+        </div>
+        
+        <!-- Experimento 2 -->
+        <div class="experiment-card animated delay-2">
+            <div class="experiment-image" style="background-image: url('https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+            <div class="experiment-content">
+                <h3 class="experiment-title">
+                    <i class="fas fa-utensils"></i> Combinações Surpresa
+                </h3>
+                <p class="experiment-desc">Teste combinações inusitadas que podem transformar alimentos rejeitados em pratos deliciosos.</p>
+                <a href="#" class="experiment-btn" onclick="startExperiment('combinations')">Participar</a>
+            </div>
+        </div>
+        
+        <!-- Experimento 3 -->
+        <div class="experiment-card animated delay-3">
+            <div class="experiment-image" style="background-image: url('https://images.unsplash.com/photo-1505576399279-565b52d4ac71?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+            <div class="experiment-content">
+                <h3 class="experiment-title">
+                    <i class="fas fa-hourglass-half"></i> Transformação do Tempo
+                </h3>
+                <p class="experiment-desc">Observe como alimentos mudam de textura e sabor com diferentes métodos de preparo.</p>
+                <a href="#" class="experiment-btn" onclick="startExperiment('transformation')">Participar</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="taste-test animated delay-2">
+        <h2 class="taste-title">
+            <i class="fas fa-ice-cream"></i> Teste Seu Paladar
+        </h2>
+        <p>Descubra seu tipo de paladar e como isso influencia suas escolhas alimentares:</p>
+        
+        <div class="taste-options">
+            <div class="taste-option" onclick="selectTasteOption(this, 'sweet')">
+                <i class="fas fa-candy-cane"></i> Adoçado
+            </div>
+            <div class="taste-option" onclick="selectTasteOption(this, 'salty')">
+                <i class="fas fa-bacon"></i> Salgado
+            </div>
+            <div class="taste-option" onclick="selectTasteOption(this, 'sour')">
+                <i class="fas fa-lemon"></i> Azedo
+            </div>
+            <div class="taste-option" onclick="selectTasteOption(this, 'bitter')">
+                <i class="fas fa-coffee"></i> Amargo
+            </div>
+            <div class="taste-option" onclick="selectTasteOption(this, 'umami')">
+                <i class="fas fa-drumstick-bite"></i> Umami
+            </div>
+        </div>
+        
+        <button class="experiment-btn" style="border: none; cursor: pointer;" onclick="analyzeTaste()">
+            <i class="fas fa-search"></i> Analisar Meu Paladar
+        </button>
+        
+        <div id="tasteResult" class="taste-result">
+            <!-- Resultado será inserido aqui pelo JavaScript -->
+        </div>
+    </div>
+    
+    <h2 style="color: var(--cor-cientista); margin: 30px 0 20px; font-size: 24px;" class="animated delay-2">
+        <i class="fas fa-chart-pie"></i> NutriFatos da Merenda
+    </h2>
+    
+    <div class="nutrition-cards">
+        <div class="nutrition-card animated delay-1">
+            <div class="nutrition-icon">
+                <i class="fas fa-apple-alt"></i>
+            </div>
+            <div class="nutrition-value">12g</div>
+            <div class="nutrition-label">Proteínas desperdiçadas por aluno/semana</div>
+        </div>
+        
+        <div class="nutrition-card animated delay-2">
+            <div class="nutrition-icon">
+                <i class="fas fa-bolt"></i>
+            </div>
+            <div class="nutrition-value">350kcal</div>
+            <div class="nutrition-label">Energia perdida diariamente</div>
+        </div>
+        
+        <div class="nutrition-card animated delay-3">
+            <div class="nutrition-icon">
+                <i class="fas fa-tint"></i>
+            </div>
+            <div class="nutrition-value">500L</div>
+            <div class="nutrition-label">Água economizada por prato completo</div>
+        </div>
+    </div>
+    
+    <div class="curiosities-section animated delay-3">
+        <h2 class="science-title">
+            <i class="fas fa-question-circle"></i> Curiosidades Científicas
+        </h2>
+        
+        <div class="curiosity-item">
+            <h3 class="curiosity-title">
+                <i class="fas fa-temperature-low"></i> Por que comida fria tem menos sabor?
+            </h3>
+            <p>Nossa percepção do sabor diminui com a temperatura porque as moléculas de aroma se movem mais devagar quando frias. Experimente aquecer levemente alimentos que você não gosta frios - pode descobrir novos sabores!</p>
+        </div>
+        
+        <div class="curiosity-item">
+            <h3 class="curiosity-title">
+                <i class="fas fa-palette"></i> A cor influencia no sabor?
+            </h3>
+            <p>Estudos mostram que o cérebro associa cores a sabores específicos. Alimentos vermelhos são percebidos como mais doces, enquanto verdes como mais ácidos. Isso explica por que às vezes julgamos mal um alimento antes de provar!</p>
+        </div>
+        
+        <div class="curiosity-item">
+            <h3 class="curiosity-title">
+                <i class="fas fa-music"></i> O som afeta nosso paladar?
+            </h3>
+            <p>Sim! Comidas crocantes parecem mais saborosas quando ouvimos o som da mastigação. E música ambiente pode aumentar em até 10% a percepção de doce ou salgado. Experimente comer em ambientes diferentes!</p>
+        </div>
+    </div>
+    
+    <div class="back-button-container">
+        <button class="back-button" onclick="window.location.href='teste1.html'">
+            <i class="fas fa-arrow-left"></i> Voltar para a Página Principal
+        </button>
+    </div>
+    
+    <div class="lab-footer animated delay-3">
+        <p>Laboratório de Sabores © 2023 | NutriEscola - Combatendo o desperdício através da ciência</p>
+        <p style="margin-top: 10px; font-size: 12px;">
+            <i class="fas fa-user-shield"></i> Todos os dados são anônimos e usados apenas para melhorar a merenda escolar
+        </p>
+    </div>
+    
+    <script>
+        // Experimento selecionado
+        function startExperiment(type) {
+            let experimentName = "";
+            switch(type) {
+                case 'blind':
+                    experimentName = "Teste Cego";
+                    break;
+                case 'combinations':
+                    experimentName = "Combinações Surpresa";
+                    break;
+                case 'transformation':
+                    experimentName = "Transformação do Tempo";
+                    break;
+            }
+            
+            alert(`Você iniciou o experimento: ${experimentName}\n\nNas próximas refeições, nossa equipe irá orientá-lo através dessa experiência científica!`);
+        }
+        
+        // Seleção de opção de paladar
+        let selectedTaste = null;
+        
+        function selectTasteOption(element, taste) {
+            document.querySelectorAll('.taste-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            selectedTaste = taste;
+        }
+        
+        // Análise de paladar
+        function analyzeTaste() {
+            if (!selectedTaste) {
+                alert("Por favor, selecione uma opção de paladar primeiro!");
+                return;
+            }
+            
+            const tasteResults = {
+                sweet: {
+                    title: "Paladar Adoçado",
+                    desc: "Você tem preferência por sabores doces! Isso é comum, mas pode levar a rejeitar alimentos mais amargos que são nutritivos. Experimente combinar vegetais com frutas doces para uma transição suave.",
+                    icon: "fa-candy-cane"
+                },
+                salty: {
+                    title: "Paladar Salgado",
+                    desc: "Você prefere sabores salgados e intensos. Cuidado com o excesso de sal! Tente explorar temperos naturais como alho, cebola e ervas para reduzir o sódio sem perder o sabor.",
+                    icon: "fa-bacon"
+                },
+                sour: {
+                    title: "Paladar Azedo",
+                    desc: "Você gosta de sabores ácidos e refrescantes. Isso é ótimo para apreciar frutas cítricas e vegetais crus. Experimente usar limão como tempero para alimentos que você normalmente recusa.",
+                    icon: "fa-lemon"
+                },
+                bitter: {
+                    title: "Paladar Amargo",
+                    desc: "Você aprecia sabores complexos e amargos, como café e chocolate amargo. Isso é raro e valioso! Você pode ser um ótimo degustador de vegetais verdes escuros, ricos em nutrientes.",
+                    icon: "fa-coffee"
+                },
+                umami: {
+                    title: "Paladar Umami",
+                    desc: "Você busca sabores profundos e carnudos, característicos do umami. Aproveite para explorar cogumelos, tomates maduros e queijos, que oferecem esse sabor de forma natural.",
+                    icon: "fa-drumstick-bite"
+                }
+            };
+            
+            const result = tasteResults[selectedTaste];
+            const resultDiv = document.getElementById('tasteResult');
+            
+            resultDiv.innerHTML = `
+                <h3 style="color: var(--cor-cientista); margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas ${result.icon}"></i> ${result.title}
+                </h3>
+                <p>${result.desc}</p>
+                <p style="margin-top: 10px; font-weight: bold; color: var(--cor-primaria);">
+                    <i class="fas fa-lightbulb"></i> Dica: No refeitório, experimente pelo menos 3 vezes um alimento antes de decidir se gosta ou não. Seu paladar pode surpreendê-lo!
+                </p>
+            `;
+            
+            resultDiv.style.display = 'block';
+        }
+        
+        // Anima os elementos quando a página carrega
+        document.addEventListener('DOMContentLoaded', function() {
+            const elements = document.querySelectorAll('.animated');
+            elements.forEach(el => {
+                el.style.opacity = '0';
+            });
+            
+            setTimeout(() => {
+                elements.forEach(el => {
+                    el.style.opacity = '1';
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html>

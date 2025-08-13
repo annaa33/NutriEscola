@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enquete - Merenda Escolar</title>
+    <style>
+        :root {
+            --cor-primaria: #2e7d32;
+            --cor-secundaria: #81c784;
+            --cor-terciaria: #d4edda;
+            --cor-texto: #333;
+            --cor-fundo: #f5f5f5;
+            --cor-destaque: #ff8f00;
+            --cor-erro: #e74c3c;
+            --cor-sucesso: #2ecc71;
+            --cor-animation: #ffeb3b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Comic Neue', 'Arial', sans-serif;
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            background-image: radial-gradient(circle at 10% 20%, var(--cor-terciaria) 0%, var(--cor-fundo) 90%);
+        }
+        
+        /* Cabeçalho */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--cor-primaria), var(--cor-secundaria), var(--cor-destaque));
+        }
+        
+        .header-content {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            color: var(--cor-primaria);
+            margin-bottom: 5px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .header p.subtitle {
+            font-size: 16px;
+            color: var(--cor-texto);
+            opacity: 0.8;
+        }
+        
+        .header-image {
+            width: 120px;
+            height: 120px;
+            margin-left: 20px;
+            background-color: var(--cor-secundaria);
+            border-radius: 50%;
+            padding: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+        
+        .header-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        
+        .header-image:hover img {
+            transform: rotate(10deg) scale(1.1);
+        }
+        
+        /* Seções da Enquete */
+        .survey-section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .survey-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        .survey-section::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--cor-primaria), var(--cor-secundaria));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s ease;
+        }
+        
+        .survey-section:hover::after {
+            transform: scaleX(1);
+        }
+        
+        .section-title {
+            font-size: 22px;
+            color: var(--cor-primaria);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed var(--cor-secundaria);
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            color: var(--cor-destaque);
+        }
+        
+        /* Opções de Emoji */
+        .emoji-options {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .emoji-option {
+            font-size: 48px;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            text-align: center;
+            width: 90px;
+            height: 90px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin: 10px;
+        }
+        
+        .emoji-option::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .emoji-option:hover {
+            transform: scale(1.15) rotate(5deg);
+            background-color: rgba(129, 199, 132, 0.2);
+        }
+        
+        .emoji-option:hover::before {
+            border-color: var(--cor-secundaria);
+            transform: scale(1.1);
+        }
+        
+        .emoji-option.selected {
+            background-color: var(--cor-secundaria);
+            transform: scale(1.15);
+            box-shadow: 0 0 20px rgba(46, 125, 50, 0.4);
+            animation: bounce 0.5s;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: scale(1.15); }
+            50% { transform: scale(1.25); }
+        }
+        
+        .emoji-option.selected::before {
+            border-color: white;
+            transform: scale(1.1);
+        }
+        
+        .emoji-label {
+            display: block;
+            font-size: 14px;
+            margin-top: 8px;
+            color: var(--cor-texto);
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .emoji-option:hover .emoji-label {
+            color: var(--cor-primaria);
+            transform: scale(1.1);
+        }
+        
+        /* Opções de Rádio */
+        .radio-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-radius: 12px;
+            background-color: #f9f9f9;
+            transition: all 0.3s;
+            cursor: pointer;
+            border-left: 5px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .radio-option::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background-color: var(--cor-secundaria);
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.3s;
+        }
+        
+        .radio-option:hover {
+            background-color: #f0f0f0;
+            transform: translateX(5px);
+        }
+        
+        .radio-option:hover::before {
+            transform: scaleY(1);
+        }
+        
+        .radio-option input {
+            margin-right: 15px;
+            transform: scale(1.3);
+            cursor: pointer;
+        }
+        
+        .radio-option.selected {
+            background-color: var(--cor-secundaria);
+            color: white;
+            border-left: 5px solid var(--cor-primaria);
+            transform: translateX(5px);
+        }
+        
+        .radio-option.selected::before {
+            display: none;
+        }
+        
+        /* Área de Comentário */
+        .comment-section {
+            position: relative;
+        }
+        
+        .comment-section textarea {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid #ddd;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 16px;
+            transition: all 0.3s;
+            background-color: #f9f9f9;
+        }
+        
+        .comment-section textarea:focus {
+            outline: none;
+            border-color: var(--cor-secundaria);
+            background-color: white;
+            box-shadow: 0 0 10px rgba(129, 199, 132, 0.3);
+        }
+        
+        .comment-section label {
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background-color: white;
+            padding: 0 10px;
+            color: var(--cor-primaria);
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        /* Contador de caracteres */
+        .char-counter {
+            text-align: right;
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+        
+        /* Botões */
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .button::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        
+        .button:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+        
+        .back-button {
+            background-color: var(--cor-erro);
+            color: white;
+        }
+        
+        .back-button:hover {
+            background-color: #c0392b;
+            transform: translateX(-3px);
+        }
+        
+        .next-button {
+            background-color: var(--cor-sucesso);
+            color: white;
+        }
+        
+        .next-button:hover {
+            background-color: #27ae60;
+            transform: translateX(3px);
+        }
+        
+        .button i {
+            margin-right: 8px;
+        }
+        
+        /* Mensagem de confirmação */
+        .confirmation-message {
+            display: none;
+            background: linear-gradient(135deg, var(--cor-secundaria), var(--cor-primaria));
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            text-align: center;
+            animation: fadeIn 0.5s, confetti 2s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .confirmation-message i {
+            font-size: 40px;
+            margin-bottom: 10px;
+            display: block;
+            animation: bounceIn 0.8s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.1); opacity: 0; }
+            60% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes confetti {
+            0% { box-shadow: inset 0 0 0 0 rgba(255, 255, 255, 0); }
+            50% { box-shadow: inset 0 0 0 100px rgba(255, 255, 255, 0.1); }
+            100% { box-shadow: inset 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+        
+        /* Efeito de confete */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--cor-animation);
+            opacity: 0;
+        }
+        
+        /* Progresso da enquete */
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, var(--cor-primaria), var(--cor-secundaria));
+            border-radius: 5px;
+            transition: width 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-bar::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                            rgba(255,255,255,0.1) 0%, 
+                            rgba(255,255,255,0.3) 50%, 
+                            rgba(255,255,255,0.1) 100%);
+            animation: progressShine 2s infinite;
+        }
+        
+        @keyframes progressShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .header-image {
+                margin: 15px 0 0 0;
+            }
+            
+            .emoji-options {
+                justify-content: center;
+            }
+            
+            .emoji-option {
+                margin: 10px;
+                width: 70px;
+                height: 70px;
+                font-size: 36px;
+            }
+            
+            .button {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="progress-container">
+        <div class="progress-bar" style="width: 100%"></div>
+    </div>
+    
+    <div class="header">
+        <div class="header-content">
+            <h1>Enquete - Merenda Escolar</h1>
+            <p class="subtitle">Sua opinião ajuda a melhorar nossa alimentação escolar</p>
+        </div>
+        <div class="header-image">
+            <img src="LOGO.png" alt="Logo NutriEscola">
+        </div>
+    </div>
+    
+    <form id="merendaForm">
+        <div class="survey-section">
+            <h2 class="section-title"><i class="fas fa-utensils"></i> Como você avalia a merenda de hoje?</h2>
+            <div class="emoji-options">
+                <div class="emoji-option" onclick="selectEmoji(this, 'excelente')">
+                    😍
+                    <span class="emoji-label">Excelente</span>
+                </div>
+                <div class="emoji-option" onclick="selectEmoji(this, 'bom')">
+                    🙂
+                    <span class="emoji-label">Bom</span>
+                </div>
+                <div class="emoji-option" onclick="selectEmoji(this, 'regular')">
+                    😐
+                    <span class="emoji-label">Regular</span>
+                </div>
+                <div class="emoji-option" onclick="selectEmoji(this, 'ruim')">
+                    😖
+                    <span class="emoji-label">Ruim</span>
+                </div>
+            </div>
+            <input type="hidden" id="avaliacao" name="avaliacao" value="">
+        </div>
+        
+        <div class="survey-section">
+            <h2 class="section-title"><i class="fas fa-question-circle"></i> Você vai comer a merenda hoje?</h2>
+            <div class="radio-options">
+                <label class="radio-option" onclick="selectRadio(this)">
+                    <input type="radio" name="vou_comer" value="sim"> 
+                    <span>Sim, vou comer tudo! 😋</span>
+                </label>
+                <label class="radio-option" onclick="selectRadio(this)">
+                    <input type="radio" name="vou_comer" value="parte"> 
+                    <span>Vou comer só parte 🍽️</span>
+                </label>
+                <label class="radio-option" onclick="selectRadio(this)">
+                    <input type="radio" name="vou_comer" value="nao"> 
+                    <span>Não vou comer hoje 🙅‍♂️</span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="survey-section comment-section">
+            <h2 class="section-title"><i class="fas fa-comment-dots"></i> Deixe um comentário (opcional)</h2>
+            <textarea name="comentario" id="comentario" rows="4" maxlength="200" placeholder="O que você mais gostou ou sugeriria melhorar?"></textarea>
+            <div class="char-counter"><span id="charCount">0</span>/200 caracteres</div>
+        </div>
+        
+        <div id="confirmationMessage" class="confirmation-message">
+            <i class="fas fa-check-circle"></i>
+            <h3>Obrigado por sua avaliação!</h3>
+            <p>Sua opinião é muito importante para melhorarmos a merenda escolar.</p>
+            <p>Você ajudou a fazer a diferença! 🎉</p>
+        </div>
+        
+        <div class="buttons">
+            <button type="button" class="button back-button" onclick="window.location.href='teste1.html'">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            <button type="button" class="button next-button" onclick="submitForm()">
+                Enviar <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </form>
+    
+    <script>
+        // Seleção de emoji
+        function selectEmoji(element, value) {
+            // Remove seleção de todos os emojis
+            document.querySelectorAll('.emoji-option').forEach(emoji => {
+                emoji.classList.remove('selected');
+            });
+            
+            // Adiciona seleção ao emoji clicado
+            element.classList.add('selected');
+            document.getElementById('avaliacao').value = value;
+            
+            // Efeito de confete para feedback positivo
+            if(value === 'excelente' || value === 'bom') {
+                createConfetti(element);
+            }
+        }
+        
+        // Seleção de opção de rádio
+        function selectRadio(element) {
+            const radioInput = element.querySelector('input[type="radio"]');
+            radioInput.checked = true;
+            
+            // Atualiza estilo visual
+            document.querySelectorAll('.radio-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+        }
+        
+        // Contador de caracteres
+        document.getElementById('comentario').addEventListener('input', function() {
+            const charCount = this.value.length;
+            document.getElementById('charCount').textContent = charCount;
+            
+            // Altera a cor quando estiver perto do limite
+            const counter = document.querySelector('.char-counter');
+            if(charCount > 180) {
+                counter.style.color = 'var(--cor-erro)';
+            } else if(charCount > 150) {
+                counter.style.color = 'var(--cor-destaque)';
+            } else {
+                counter.style.color = '#999';
+            }
+        });
+        
+        // Efeito de confete
+        function createConfetti(element) {
+            const colors = ['#2ecc71', '#e74c3c', '#3498db', '#f1c40f', '#9b59b6'];
+            
+            for(let i = 0; i < 10; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * 100 + 'px';
+                confetti.style.top = Math.random() * 100 + 'px';
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                
+                element.appendChild(confetti);
+                
+                // Animação
+                const animation = confetti.animate([
+                    { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                    { transform: `translateY(${Math.random() * 100 - 50}px) translateX(${Math.random() * 100 - 50}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                ], {
+                    duration: 1000 + Math.random() * 1000,
+                    easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)'
+                });
+                
+                animation.onfinish = () => confetti.remove();
+            }
+        }
+        
+        // Envio do formulário
+        function submitForm() {
+            const avaliacao = document.getElementById('avaliacao').value;
+            const vouComer = document.querySelector('input[name="vou_comer"]:checked');
+            
+            // Validação
+            if (!avaliacao) {
+                alert('Por favor, avalie a merenda selecionando uma das opções.');
+                return;
+            }
+            
+            if (!vouComer) {
+                alert('Por favor, informe se você vai comer a merenda hoje.');
+                return;
+            }
+            
+            // Mostra mensagem de confirmação
+            document.getElementById('confirmationMessage').style.display = 'block';
+            
+            // Rolagem para mostrar a mensagem
+            document.getElementById('confirmationMessage').scrollIntoView({
+                behavior: 'smooth'
+            });
+            
+            // Cria efeito de confete na mensagem
+            for(let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    createConfetti(document.getElementById('confirmationMessage'));
+                }, i * 100);
+            }
+            
+            // Desabilita os botões após o envio
+            document.querySelectorAll('.button').forEach(btn => {
+                btn.disabled = true;
+                btn.style.opacity = '0.6';
+            });
+            
+            // Aqui você pode adicionar código para enviar os dados para um servidor
+            // Exemplo:
+            // const formData = new FormData(document.getElementById('merendaForm'));
+            // fetch('/enviar-enquete', { method: 'POST', body: formData })
+            //   .then(response => response.json())
+            //   .then(data => console.log('Sucesso:', data))
+            //   .catch(error => console.error('Erro:', error));
+        }
+    </script>
+</body>
+</html>

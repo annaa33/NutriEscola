@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NutriEscola - Cardápio da Escola Estadual Padre José de Anchieta</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --cor-primaria: #2e7d32;
+      --cor-secundaria: #81c784;
+      --cor-texto: #333;
+      --cor-fundo: #f5f5f5;
+      --cor-destaque: #ff8f00;
+      --cor-alerta: #d32f2f;
+      --cor-info: #0288d1;
+      --cor-dia-atual: #1b5e20;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: var(--cor-fundo);
+      color: var(--cor-texto);
+      line-height: 1.6;
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      grid-template-areas: 
+        "header header"
+        "sidebar main";
+      min-height: 100vh;
+    }
+    
+    /* Cabeçalho */
+    header {
+      grid-area: header;
+      background-color: var(--cor-primaria);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .logo {
+      height: 60px;
+      width: auto;
+    }
+    
+    .titulo-site h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.2rem;
+    }
+    
+    .titulo-site p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    
+    /* Menu de Navegação */
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 1.5rem;
+    }
+    
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+    
+    nav a:hover {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    /* Menu Lateral */
+    aside {
+      grid-area: sidebar;
+      background-color: white;
+      padding: 1.5rem;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    
+    .menu-dias {
+      margin-top: 1rem;
+    }
+    
+    .menu-dias h3 {
+      color: var(--cor-primaria);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--cor-secundaria);
+    }
+    
+    .dia-item {
+      margin-bottom: 0.8rem;
+    }
+    
+    .dia-item a {
+      display: block;
+      padding: 0.8rem;
+      background-color: var(--cor-secundaria);
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background-color 0.3s, transform 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .dia-item a:hover {
+      background-color: var(--cor-primaria);
+      transform: translateX(5px);
+    }
+    
+    .dia-item.ativo a {
+      background-color: var(--cor-dia-atual);
+      font-weight: bold;
+      box-shadow: 0 0 0 2px var(--cor-destaque);
+    }
+    
+    .dia-item a i {
+      width: 20px;
+      text-align: center;
+    }
+    
+    .filtros-alergenos {
+      margin-top: 2rem;
+      padding: 1rem;
+      background-color: #f5f5f5;
+      border-radius: 8px;
+    }
+    
+    .filtros-alergenos h3 {
+      color: var(--cor-primaria);
+      margin-bottom: 0.8rem;
+    }
+    
+    .filtro-opcao {
+      margin-bottom: 0.5rem;
+    }
+    
+    .filtro-opcao label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+    
+    /* Área Principal */
+    main {
+      grid-area: main;
+      padding: 2rem;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .card h2 {
+      color: var(--cor-primaria);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--cor-secundaria);
+    }
+    
+    .data-atual {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--cor-destaque);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .merenda-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    
+    .merenda-titulo {
+      font-size: 1.5rem;
+      color: var(--cor-primaria);
+      text-align: center;
+    }
+    
+    .merenda-imagem-container {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+    
+    .merenda-imagem {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.3s;
+    }
+    
+    .merenda-imagem:hover {
+      transform: scale(1.02);
+    }
+    
+    .merenda-descricao {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .ingredientes {
+      margin-top: 1rem;
+      font-style: italic;
+      color: #555;
+    }
+    
+    .alergenos {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: 8px;
+      background-color: #ffebee;
+    }
+    
+    .alergenos h4 {
+      color: var(--cor-alerta);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .alergenos ul {
+      list-style-position: inside;
+      padding-left: 1rem;
+    }
+    
+    .alergenos li {
+      margin-bottom: 0.3rem;
+    }
+    
+    .nutricional-info {
+      margin-top: 2rem;
+      background-color: #e8f5e9;
+      padding: 1.5rem;
+      border-radius: 8px;
+      width: 100%;
+    }
+    
+    .nutricional-info h4 {
+      color: var(--cor-primaria);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .tabela-nutricional {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    
+    .tabela-nutricional th, 
+    .tabela-nutricional td {
+      padding: 0.8rem;
+      text-align: left;
+      border-bottom: 1px solid #c8e6c9;
+    }
+    
+    .tabela-nutricional th {
+      background-color: var(--cor-secundaria);
+      color: white;
+    }
+    
+    .tabela-nutricional tr:nth-child(even) {
+      background-color: #f1f8e9;
+    }
+    
+    .dicas-nutricionais {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background-color: #e3f2fd;
+      border-radius: 8px;
+    }
+    
+    .dicas-nutricionais h4 {
+      color: var(--cor-info);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .avaliacao {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .avaliacao h4 {
+      color: var(--cor-primaria);
+    }
+    
+    .estrelas {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .estrela {
+      color: #ccc;
+      cursor: pointer;
+      font-size: 1.5rem;
+      transition: color 0.2s;
+    }
+    
+    .estrela.ativa {
+      color: var(--cor-destaque);
+    }
+    
+    /* Rodapé */
+    footer {
+      grid-column: 1 / -1;
+      background-color: var(--cor-primaria);
+      color: white;
+      text-align: center;
+      padding: 1.5rem;
+      margin-top: auto;
+    }
+    
+    .contato {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+    
+    .contato a {
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+      body {
+        grid-template-columns: 1fr;
+        grid-template-areas: 
+          "header"
+          "main"
+          "sidebar";
+      }
+      
+      header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      aside {
+        order: 3;
+      }
+    }
+    
+    /* Animações */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .card {
+      animation: fadeIn 0.5s ease-out;
+    }
+    
+    /* Classes para alergenos */
+    .alergeno-lactose::before,
+    .alergeno-gluten::before,
+    .alergeno-acucar::before {
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      margin-right: 0.3rem;
+    }
+
+    .card img {
+    width: 500px;
+    display: block;
+    margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+  }
+    
+    .alergeno-lactose::before {
+      content: "\f79e"; /* Ícone de lactose */
+      color: var(--cor-alerta);
+    }
+    
+    .alergeno-gluten::before {
+      content: "\f7a0"; /* Ícone de gluten */
+      color: var(--cor-alerta);
+    }
+    
+    .alergeno-acucar::before {
+      content: "\f0e0"; /* Ícone de açúcar */
+      color: var(--cor-alerta);
+    }
+    
+    /* Ícones dos dias */
+    .icone-dia {
+      font-size: 1rem;
+      width: 20px;
+      display: inline-block;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- Cabeçalho -->
+  <header>
+    <div class="logo-container">
+      <img src="logo.png" alt="Logo NutriEscola" class="logo">
+      <div class="titulo-site">
+        <h1>NutriEscola</h1>
+        <p>Alimentação saudável para nossos alunos</p>
+      </div>
+    </div>
+    
+    <nav>
+      <ul>
+        <li><a href="#"><i class="fas fa-home"></i> Início</a></li>
+        <li><a href="pagina2.html"><i class="fas fa-utensils"></i> Clique aqui</a></li>
+        <li><a href="pagina4.html"><i class="fas fa-flask"></i> Ciência dos Alimentos</a></li>
+        <li><a href="pagina3.html"><i class="fas fa-trash-alt"></i> Combate ao Desperdício</a></li>
+      </ul>
+    </nav>
+  </header>
+  
+  <!-- Menu Lateral -->
+  <aside>
+    <div class="menu-dias">
+      <h3><i class="fas fa-calendar-alt"></i> Cardápio da Semana</h3>
+      <div class="dia-item" id="segunda-item">
+        <a href="#" data-dia="segunda"><i class="fas fa-calendar-day icone-dia"></i> Segunda-feira</a>
+      </div>
+      <div class="dia-item" id="terca-item">
+        <a href="#" data-dia="terca"><i class="fas fa-calendar-day icone-dia"></i> Terça-feira</a>
+      </div>
+      <div class="dia-item" id="quarta-item">
+        <a href="#" data-dia="quarta"><i class="fas fa-calendar-day icone-dia"></i> Quarta-feira</a>
+      </div>
+      <div class="dia-item" id="quinta-item">
+        <a href="#" data-dia="quinta"><i class="fas fa-calendar-day icone-dia"></i> Quinta-feira</a>
+      </div>
+      <div class="dia-item" id="sexta-item">
+        <a href="#" data-dia="sexta"><i class="fas fa-calendar-day icone-dia"></i> Sexta-feira</a>
+      </div>
+    </div>
+    
+    <div class="filtros-alergenos">
+      <h3><i class="fas fa-filter"></i> Filtros</h3>
+      <div class="filtro-opcao">
+        <input type="checkbox" id="filtro-diabeticos">
+        <label for="filtro-diabeticos"><i class="fas fa-syringe"></i> Adequado para diabéticos</label>
+      </div>
+      <div class="filtro-opcao">
+        <input type="checkbox" id="filtro-lactose">
+        <label for="filtro-lactose"><i class="fas fa-cheese"></i> Sem lactose</label>
+      </div>
+      <div class="filtro-opcao">
+        <input type="checkbox" id="filtro-gluten">
+        <label for="filtro-gluten"><i class="fas fa-bread-slice"></i> Sem glúten</label>
+      </div>
+    </div>
+  </aside>
+  
+  <!-- Área Principal -->
+  <main>
+    <div class="card">
+      <img src="cuscuz.jpg" alt="">
+      <h2><i class="fas fa-utensils"></i> Merenda Escolar</h2>
+      <div class="data-atual" id="dataAtual">
+        <i class="fas fa-calendar-check"></i>
+        <span id="dataTexto"></span>
+      </div>
+      
+      <div class="merenda-container">
+        <h3 class="merenda-titulo" id="merenda-titulo">A merenda de hoje será:</h3>
+        <p class="merenda-prato" id="merenda-prato"></p>
+        
+        <div class="merenda-imagem-container">
+          <img src="canja.jpg" alt="Foto da merenda" class="merenda-imagem" id="merenda-imagem">
+        </div>
+        
+        <div class="merenda-descricao">
+          <p id="merenda-descricao"></p>
+          <div class="ingredientes">
+            <p><strong>Ingredientes:</strong> <span id="merenda-ingredientes"></span></p>
+          </div>
+        </div>
+        
+        <div class="alergenos">
+          <h4><i class="fas fa-exclamation-triangle"></i> Atenção Alérgenos</h4>
+          <ul id="alergenos-lista">
+            <!-- Preenchido pelo JavaScript -->
+          </ul>
+        </div>
+        
+        <div class="nutricional-info">
+          <h4><i class="fas fa-chart-pie"></i> Informação Nutricional (por porção)</h4>
+          <table class="tabela-nutricional">
+            <thead>
+              <tr>
+                <th>Nutriente</th>
+                <th>Quantidade</th>
+                <th>% VD*</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-nutricional-corpo">
+              <!-- Preenchido pelo JavaScript -->
+            </tbody>
+          </table>
+          <p style="margin-top: 0.5rem; font-size: 0.8rem;">*Valores Diários de referência com base em uma dieta de 2.000 kcal ou 8.400 kJ.</p>
+        </div>
+        
+        <div class="dicas-nutricionais">
+          <h4><i class="fas fa-lightbulb"></i> Dica Nutricional</h4>
+          <p id="dica-nutricional"></p>
+        </div>
+        
+        <div class="avaliacao">
+          <h4>Avalie esta refeição</h4>
+          <div class="estrelas">
+            <i class="fas fa-star estrela" data-valor="1"></i>
+            <i class="fas fa-star estrela" data-valor="2"></i>
+            <i class="fas fa-star estrela" data-valor="3"></i>
+            <i class="fas fa-star estrela" data-valor="4"></i>
+            <i class="fas fa-star estrela" data-valor="5"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2><i class="fas fa-info-circle"></i> Sobre o Programa de Alimentação</h2>
+      <p>O programa de alimentação escolar tem como objetivo fornecer refeições balanceadas e nutritivas para todos os alunos, contribuindo para seu desenvolvimento físico e intelectual.</p>
+      <p>Nossos cardápios são elaborados por nutricionistas, seguindo as diretrizes do Programa Nacional de Alimentação Escolar (PNAE), que estabelece:</p>
+      <ul style="margin: 1rem 0 1rem 2rem;">
+        <li>Uso de alimentos variados e regionais</li>
+        <li>Restrição de alimentos ultraprocessados</li>
+        <li>Adequação às necessidades nutricionais por faixa etária</li>
+        <li>Inclusão de alimentos orgânicos quando possível</li>
+      </ul>
+      <p>Para alunos com restrições alimentares (diabetes, intolerância à lactose, doença celíaca etc.), oferecemos cardápios adaptados mediante apresentação de atestado médico.</p>
+    </div>
+  </main>
+  
+  <!-- Rodapé -->
+  <footer>
+    <p>NutriEscola &copy; 2025 - Escola Estadual Padre José de Anchieta</p>
+    <p>Desenvolvido para promover hábitos alimentares saudáveis</p>
+    <div class="contato">
+      <a href="#"><i class="fas fa-envelope"></i> contato@nutriescola.com</a>
+      <a href="#"><i class="fas fa-phone"></i> (11) 1234-5678</a>
+      <a href="#"><i class="fas fa-map-marker-alt"></i> Rua Exemplo, 123 - São Paulo/SP</a>
+    </div>
+  </footer>
+  
+  <script>
+    // Dados completos do cardápio atualizados com imagens locais
+    const cardapioSemana = {
+      segunda: {
+        prato: "Suco com bolacha",
+        descricao: "Suco natural de frutas da estação acompanhado de bolachas cream cracker.",
+        ingredientes: "Frutas da estação (laranja, manga ou maracujá), açúcar (opcional), bolacha cream cracker.",
+        alergenos: ["gluten"],
+        imagem: "imagens/suco_bolacha.jpg",
+        nutricional: {
+          energia: { valor: "320 kcal", vd: "16%" },
+          carboidratos: { valor: "65g", vd: "22%" },
+          proteinas: { valor: "5g", vd: "7%" },
+          gorduras: { valor: "8g", vd: "15%" },
+          saturadas: { valor: "3g", vd: "14%" },
+          fibras: { valor: "3g", vd: "12%" },
+          sodio: { valor: "400mg", vd: "17%" },
+          vitaminas: [
+            { nome: "Vitamina C", valor: "45mg", vd: "75%" },
+            { nome: "Vitamina A", valor: "500 UI", vd: "10%" },
+            { nome: "Cálcio", valor: "50mg", vd: "5%" },
+            { nome: "Ferro", valor: "1.5mg", vd: "11%" }
+          ]
+        },
+        dica: "O suco natural fornece vitaminas e minerais essenciais, enquanto as bolachas oferecem carboidratos para energia rápida. Opte por sucos sem adição de açúcar para uma opção mais saudável."
+      },
+      terca: {
+        prato: "Suco com bolacha",
+        descricao: "Suco natural de frutas da estação acompanhado de bolachas cream cracker.",
+        ingredientes: "Frutas da estação (laranja, manga ou maracujá), açúcar (opcional), bolacha cream cracker.",
+        alergenos: ["gluten"],
+        imagem: "imagens/suco_bolacha.jpg",
+        nutricional: {
+          energia: { valor: "320 kcal", vd: "16%" },
+          carboidratos: { valor: "65g", vd: "22%" },
+          proteinas: { valor: "5g", vd: "7%" },
+          gorduras: { valor: "8g", vd: "15%" },
+          saturadas: { valor: "3g", vd: "14%" },
+          fibras: { valor: "3g", vd: "12%" },
+          sodio: { valor: "400mg", vd: "17%" },
+          vitaminas: [
+            { nome: "Vitamina C", valor: "45mg", vd: "75%" },
+            { nome: "Vitamina A", valor: "500 UI", vd: "10%" },
+            { nome: "Cálcio", valor: "50mg", vd: "5%" },
+            { nome: "Ferro", valor: "1.5mg", vd: "11%" }
+          ]
+        },
+        dica: "O suco natural fornece vitaminas e minerais essenciais, enquanto as bolachas oferecem carboidratos para energia rápida. Opte por sucos sem adição de açúcar para uma opção mais saudável."
+      },
+      quarta: {
+       prato: "Cuscuz com charque e verduras + Suco de manga",
+        descricao: "Prato típico nordestino feito com cuscuz de milho, charque desfiado e acompanhado de verduras frescas, servido com suco natural de manga.",
+        ingredientes: "Cuscuz de milho, charque, cebola, tomate, coentro, pimentão, alface, rúcula, manga, água e açúcar (opcional).",
+        alergenos: [],
+        imagem: "imagens/cuscuz_charque.jpg",
+        nutricional: {
+          energia: { valor: "450 kcal", vd: "23%" },
+          carboidratos: { valor: "55g", vd: "18%" },
+          proteinas: { valor: "25g", vd: "33%" },
+          gorduras: { valor: "12g", vd: "22%" },
+          saturadas: { valor: "4g", vd: "18%" },
+          fibras: { valor: "8g", vd: "32%" },
+          sodio: { valor: "800mg", vd: "33%" },
+          vitaminas: [
+            { nome: "Vitamina C", valor: "60mg", vd: "100%" },
+            { nome: "Vitamina A", valor: "1200 UI", vd: "24%" },
+            { nome: "Ferro", valor: "3.5mg", vd: "25%" },
+            { nome: "Cálcio", valor: "120mg", vd: "12%" },
+            { nome: "Potássio", valor: "700mg", vd: "15%" }
+          ]
+        },
+        dica: "O cuscuz é uma excelente fonte de carboidratos complexos e fibras, enquanto o charque fornece proteínas de alta qualidade. As verduras adicionam vitaminas e minerais essenciais. O suco de manga é rico em vitamina A e C, importantes para a imunidade e saúde da pele."
+      },
+      quinta: {
+        prato: "Canja de galinha",
+        descricao: "Sopa tradicional reconfortante feita com frango, arroz, cenoura, batata e temperos naturais, perfeita para dias frios.",
+        ingredientes: "Frango, arroz, cenoura, batata, cebola, alho, salsinha, sal, azeite, água e temperos naturais.",
+        alergenos: [],
+        imagem: "imagens/canja.jpg",
+        nutricional: {
+          energia: { valor: "350 kcal", vd: "18%" },
+          carboidratos: { valor: "45g", vd: "15%" },
+          proteinas: { valor: "22g", vd: "29%" },
+          gorduras: { valor: "8g", vd: "15%" },
+          saturadas: { valor: "2g", vd: "9%" },
+          fibras: { valor: "5g", vd: "20%" },
+          sodio: { valor: "700mg", vd: "29%" },
+        vitaminas: [
+            { nome: "Vitamina B6", valor: "0.8mg", vd: "40%" },
+            { nome: "Zinco", valor: "3mg", vd: "27%" },
+            { nome: "Potássio", valor: "600mg", vd: "13%" },
+            { nome: "Fósforo", valor: "250mg", vd: "25%" },
+            { nome: "Vitamina A", valor: "800 UI", vd: "16%" }
+          ]
+        },
+        dica: "A canja é uma refeição leve e nutritiva, ideal para dias frios ou quando se está com pouco apetite. O frango fornece proteínas de alta qualidade, enquanto os vegetais adicionam vitaminas e minerais. A sopa também ajuda na hidratação e é de fácil digestão."
+      },
+      sexta: {
+        prato: "Suco com bolacha",
+        descricao: "Suco natural de frutas da estação acompanhado de bolachas cream cracker.",
+        ingredientes: "Frutas da estação (laranja, manga ou maracujá), açúcar (opcional), bolacha cream cracker.",
+        alergenos: ["gluten"],
+        imagem: "imagens/suco_bolacha.jpg",
+        nutricional: {
+          energia: { valor: "320 kcal", vd: "16%" },
+          carboidratos: { valor: "65g", vd: "22%" },
+          proteinas: { valor: "5g", vd: "7%" },
+          gorduras: { valor: "8g", vd: "15%" },
+          saturadas: { valor: "3g", vd: "14%" },
+          fibras: { valor: "3g", vd: "12%" },
+          sodio: { valor: "400mg", vd: "17%" },
+          vitaminas: [
+            { nome: "Vitamina C", valor: "45mg", vd: "75%" },
+            { nome: "Vitamina A", valor: "500 UI", vd: "10%" },
+            { nome: "Cálcio", valor: "50mg", vd: "5%" },
+            { nome: "Ferro", valor: "1.5mg", vd: "11%" }
+          ]
+        },
+        dica: "O suco natural fornece vitaminas e minerais essenciais, enquanto as bolachas oferecem carboidratos para energia rápida. Opte por sucos sem adição de açúcar para uma opção mais saudável."
+      }
+    };
+
+    // Função para determinar o dia da semana atual
+    function getDiaSemanaAtual() {
+      const dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+      const hoje = new Date();
+      return dias[hoje.getDay()];
+    }
+
+    // Função para formatar a data
+    function formatarData(data) {
+      const opcoes = { 
+        weekday: 'long', 
+        day: 'numeric', 
+        month: 'long', 
+        year: 'numeric' 
+      };
+      return data.toLocaleDateString('pt-BR', opcoes);
+    }
+
+    // Função para carregar o cardápio do dia
+    function carregarCardapio(dia) {
+      const cardapio = cardapioSemana[dia];
+      
+      if (cardapio) {
+        // Atualiza os elementos da página
+        document.getElementById('merenda-prato').textContent = cardapio.prato;
+        document.getElementById('merenda-descricao').textContent = cardapio.descricao;
+        document.getElementById('merenda-ingredientes').textContent = cardapio.ingredientes;
+        document.getElementById('merenda-imagem').src = cardapio.imagem;
+        document.getElementById('merenda-imagem').alt = cardapio.prato;
+        document.getElementById('dica-nutricional').textContent = cardapio.dica;
+        
+        // Atualiza alergenos
+        const alergenosLista = document.getElementById('alergenos-lista');
+        alergenosLista.innerHTML = '';
+        
+        if (cardapio.alergenos.length === 0) {
+          alergenosLista.innerHTML = '<li>Nenhum alérgeno identificado</li>';
+        } else {
+          cardapio.alergenos.forEach(alergeno => {
+            const li = document.createElement('li');
+            
+            switch(alergeno) {
+              case 'lactose':
+                li.className = 'alergeno-lactose';
+                li.textContent = 'Contém lactose';
+                break;
+              case 'gluten':
+                li.className = 'alergeno-gluten';
+                li.textContent = 'Contém glúten';
+                break;
+              case 'acucar':
+                li.className = 'alergeno-acucar';
+                li.textContent = 'Contém açúcares naturais';
+                break;
+            }
+            
+            alergenosLista.appendChild(li);
+          });
+        }
+        
+        // Atualiza tabela nutricional
+        const tabelaCorpo = document.getElementById('tabela-nutricional-corpo');
+        tabelaCorpo.innerHTML = '';
+        
+        // Adiciona informações nutricionais básicas
+        const nutrientesBasicos = [
+          { nome: 'Valor Energético', valor: cardapio.nutricional.energia.valor, vd: cardapio.nutricional.energia.vd },
+          { nome: 'Carboidratos', valor: cardapio.nutricional.carboidratos.valor, vd: cardapio.nutricional.carboidratos.vd },
+          { nome: 'Proteínas', valor: cardapio.nutricional.proteinas.valor, vd: cardapio.nutricional.proteinas.vd },
+          { nome: 'Gorduras Totais', valor: cardapio.nutricional.gorduras.valor, vd: cardapio.nutricional.gorduras.vd },
+          { nome: 'Gorduras Saturadas', valor: cardapio.nutricional.saturadas.valor, vd: cardapio.nutricional.saturadas.vd },
+          { nome: 'Fibras', valor: cardapio.nutricional.fibras.valor, vd: cardapio.nutricional.fibras.vd },
+          { nome: 'Sódio', valor: cardapio.nutricional.sodio.valor, vd: cardapio.nutricional.sodio.vd }
+        ];
+        
+        nutrientesBasicos.forEach(nutriente => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${nutriente.nome}</td>
+            <td>${nutriente.valor}</td>
+            <td>${nutriente.vd}</td>
+          `;
+          tabelaCorpo.appendChild(tr);
+        });
+        
+        // Adiciona vitaminas e minerais
+        if (cardapio.nutricional.vitaminas) {
+          cardapio.nutricional.vitaminas.forEach(vitamina => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${vitamina.nome}</td>
+              <td>${vitamina.valor}</td>
+              <td>${vitamina.vd}</td>
+            `;
+            tabelaCorpo.appendChild(tr);
+          });
+        }
+      }
+    }
+
+    // Ao carregar a página
+    document.addEventListener('DOMContentLoaded', function() {
+      const hoje = new Date();
+      const diaSemanaAtual = getDiaSemanaAtual();
+      
+      // Atualiza a data exibida
+      document.getElementById('dataTexto').textContent = formatarData(hoje);
+      
+      // Verifica se o dia atual é um dia escolar (segunda a sexta)
+      if (diaSemanaAtual === 'sabado' || diaSemanaAtual === 'domingo') {
+        // Mostra mensagem de final de semana
+        document.getElementById('merenda-titulo').textContent = "Não há merenda aos finais de semana";
+        document.getElementById('merenda-prato').textContent = "Volte na segunda-feira!";
+        document.getElementById('merenda-imagem').src = "imagens/fim_de_semana.jpg";
+        document.getElementById('merenda-imagem').alt = "Alimentos saudáveis";
+        
+        // Desativa todos os itens do menu
+        document.querySelectorAll('.dia-item').forEach(item => {
+          item.classList.remove('ativo');
+        });
+      } else {
+        // Ativa o item do menu correspondente ao dia atual
+        const itemAtivo = document.getElementById(`${diaSemanaAtual}-item`);
+        if (itemAtivo) {
+          itemAtivo.classList.add('ativo');
+        }
+        
+        // Carrega o cardápio do dia atual
+        carregarCardapio(diaSemanaAtual);
+        
+        // Configura os eventos de clique nos dias da semana
+        document.querySelectorAll('.dia-item a').forEach(link => {
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Remove a classe 'ativo' de todos os itens
+            document.querySelectorAll('.dia-item').forEach(item => {
+              item.classList.remove('ativo');
+            });
+            
+            // Adiciona a classe 'ativo' ao item clicado
+            this.parentElement.classList.add('ativo');
+            
+            // Carrega o cardápio do dia selecionado
+            const diaSelecionado = this.getAttribute('data-dia');
+            carregarCardapio(diaSelecionado);
+          });
+        });
+      }
+      
+      // Sistema de avaliação por estrelas
+      document.querySelectorAll('.estrela').forEach(estrela => {
+        estrela.addEventListener('click', function() {
+          const valor = parseInt(this.getAttribute('data-valor'));
+          
+          // Remove todas as classes 'ativa'
+          document.querySelectorAll('.estrela').forEach(e => {
+            e.classList.remove('ativa');
+          });
+          
+          // Adiciona classe 'ativa' até a estrela clicada
+          for (let i = 1; i <= valor; i++) {
+            document.querySelector(`.estrela[data-valor="${i}"]`).classList.add('ativa');
+          }
+          
+          // Aqui você poderia enviar a avaliação para o servidor
+          console.log(`Avaliação enviada: ${valor} estrelas`);
+        });
+      });
+      
+      // Filtros de alergenos
+      document.querySelectorAll('.filtro-opcao input').forEach(filtro => {
+        filtro.addEventListener('change', function() {
+          // Aqui você implementaria a lógica para filtrar os cardápios
+          console.log(`Filtro ${this.id} alterado: ${this.checked}`);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
+          
