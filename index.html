@@ -15,6 +15,7 @@
       --cor-alerta: #d32f2f;
       --cor-info: #0288d1;
       --cor-dia-atual: #1b5e20;
+      --cor-dia-futuro: #757575;
     }
     
     * {
@@ -116,7 +117,6 @@
     .dia-item a {
       display: block;
       padding: 0.8rem;
-      background-color: var(--cor-secundaria);
       color: white;
       text-decoration: none;
       border-radius: 4px;
@@ -127,7 +127,6 @@
     }
     
     .dia-item a:hover {
-      background-color: var(--cor-primaria);
       transform: translateX(5px);
     }
     
@@ -137,9 +136,26 @@
       box-shadow: 0 0 0 2px var(--cor-destaque);
     }
     
+    .dia-item.futuro a {
+      background-color: var(--cor-dia-futuro);
+      cursor: not-allowed;
+    }
+    
     .dia-item a i {
       width: 20px;
       text-align: center;
+    }
+    
+    .aviso-futuro {
+      font-size: 0.8rem;
+      margin-top: 0.3rem;
+      color: var(--cor-dia-futuro);
+      text-align: center;
+      display: none;
+    }
+    
+    .dia-item.futuro .aviso-futuro {
+      display: block;
     }
     
     .filtros-alergenos {
@@ -346,6 +362,26 @@
       color: var(--cor-destaque);
     }
     
+    /* Cardápio Futuro */
+    .cardapio-futuro {
+      text-align: center;
+      padding: 2rem;
+      background-color: #f5f5f5;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+    
+    .cardapio-futuro i {
+      font-size: 3rem;
+      color: var(--cor-dia-futuro);
+      margin-bottom: 1rem;
+    }
+    
+    .cardapio-futuro h3 {
+      color: var(--cor-dia-futuro);
+      margin-bottom: 1rem;
+    }
+    
     /* Rodapé */
     footer {
       grid-column: 1 / -1;
@@ -417,12 +453,12 @@
     }
 
     .card img {
-    width: 500px;
-    display: block;
-    margin: 0 auto;
-    border-radius: 8px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-  }
+      width: 500px;
+      display: block;
+      margin: 0 auto;
+      border-radius: 8px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
     
     .alergeno-lactose::before {
       content: "\f79e"; /* Ícone de lactose */
@@ -475,18 +511,23 @@
       <h3><i class="fas fa-calendar-alt"></i> Cardápio da Semana</h3>
       <div class="dia-item" id="segunda-item">
         <a href="#" data-dia="segunda"><i class="fas fa-calendar-day icone-dia"></i> Segunda-feira</a>
+        <div class="aviso-futuro">Volte na segunda para ver o cardápio!</div>
       </div>
       <div class="dia-item" id="terca-item">
         <a href="#" data-dia="terca"><i class="fas fa-calendar-day icone-dia"></i> Terça-feira</a>
+        <div class="aviso-futuro">Volte na terça para ver o cardápio!</div>
       </div>
       <div class="dia-item" id="quarta-item">
         <a href="#" data-dia="quarta"><i class="fas fa-calendar-day icone-dia"></i> Quarta-feira</a>
+        <div class="aviso-futuro">Volte na quarta para ver o cardápio!</div>
       </div>
       <div class="dia-item" id="quinta-item">
         <a href="#" data-dia="quinta"><i class="fas fa-calendar-day icone-dia"></i> Quinta-feira</a>
+        <div class="aviso-futuro">Volte na quinta para ver o cardápio!</div>
       </div>
       <div class="dia-item" id="sexta-item">
         <a href="#" data-dia="sexta"><i class="fas fa-calendar-day icone-dia"></i> Sexta-feira</a>
+        <div class="aviso-futuro">Volte na sexta para ver o cardápio!</div>
       </div>
     </div>
     
@@ -510,14 +551,13 @@
   <!-- Área Principal -->
   <main>
     <div class="card">
-      <img src="cuscuz.jpg" alt="">
       <h2><i class="fas fa-utensils"></i> Merenda Escolar</h2>
       <div class="data-atual" id="dataAtual">
         <i class="fas fa-calendar-check"></i>
         <span id="dataTexto"></span>
       </div>
       
-      <div class="merenda-container">
+      <div class="merenda-container" id="container-hoje">
         <h3 class="merenda-titulo" id="merenda-titulo">A merenda de hoje será:</h3>
         <p class="merenda-prato" id="merenda-prato"></p>
         
@@ -572,6 +612,13 @@
           </div>
         </div>
       </div>
+      
+      <div class="cardapio-futuro" id="container-futuro" style="display: none;">
+        <i class="fas fa-lock"></i>
+        <h3>Cardápio Indisponível</h3>
+        <p>O cardápio deste dia será revelado na data correspondente.</p>
+        <p>Volte no dia para descobrir o que teremos de especial!</p>
+      </div>
     </div>
     
     <div class="card">
@@ -607,7 +654,7 @@
         descricao: "Suco natural de frutas da estação acompanhado de bolachas cream cracker.",
         ingredientes: "Frutas da estação (laranja, manga ou maracujá), açúcar (opcional), bolacha cream cracker.",
         alergenos: ["gluten"],
-        imagem: "imagens/suco_bolacha.jpg",
+        imagem: "canja.jpg",
         nutricional: {
           energia: { valor: "320 kcal", vd: "16%" },
           carboidratos: { valor: "65g", vd: "22%" },
@@ -630,7 +677,7 @@
         descricao: "Suco natural de frutas da estação acompanhado de bolachas cream cracker.",
         ingredientes: "Frutas da estação (laranja, manga ou maracujá), açúcar (opcional), bolacha cream cracker.",
         alergenos: ["gluten"],
-        imagem: "imagens/suco_bolacha.jpg",
+        imagem: "sucobolacha.jpg",
         nutricional: {
           energia: { valor: "320 kcal", vd: "16%" },
           carboidratos: { valor: "65g", vd: "22%" },
@@ -653,7 +700,7 @@
         descricao: "Prato típico nordestino feito com cuscuz de milho, charque desfiado e acompanhado de verduras frescas, servido com suco natural de manga.",
         ingredientes: "Cuscuz de milho, charque, cebola, tomate, coentro, pimentão, alface, rúcula, manga, água e açúcar (opcional).",
         alergenos: [],
-        imagem: "imagens/cuscuz_charque.jpg",
+        imagem: "cuscuz.jpg",
         nutricional: {
           energia: { valor: "450 kcal", vd: "23%" },
           carboidratos: { valor: "55g", vd: "18%" },
@@ -677,7 +724,7 @@
         descricao: "Sopa tradicional reconfortante feita com frango, arroz, cenoura, batata e temperos naturais, perfeita para dias frios.",
         ingredientes: "Frango, arroz, cenoura, batata, cebola, alho, salsinha, sal, azeite, água e temperos naturais.",
         alergenos: [],
-        imagem: "imagens/canja.jpg",
+        imagem: "canja.jpg",
         nutricional: {
           energia: { valor: "350 kcal", vd: "18%" },
           carboidratos: { valor: "45g", vd: "15%" },
@@ -694,14 +741,14 @@
             { nome: "Vitamina A", valor: "800 UI", vd: "16%" }
           ]
         },
-        dica: "A canja é uma refeição leve e nutritiva, ideal para dias frios ou quando se está com pouco apetite. O frango fornece proteínas de alta qualidade, enquanto os vegetais adicionam vitaminas e minerais. A sopa também ajuda na hidratação e é de fácil digestão."
+        dica: "A canja é uma refeição leve e nutritiva, ideal para dias frios ou quando se está com pouco apetite. O frango fornece proteínas de alta qualidade, enquanto os vegetais adicionam vitaminas e minerais. A sopa também ajuda na hydratação e é de fácil digestão."
       },
       sexta: {
         prato: "Suco com bolacha",
         descricao: "Suco natural de frutas da estação acompanhado de bolachas cream cracker.",
         ingredientes: "Frutas da estação (laranja, manga ou maracujá), açúcar (opcional), bolacha cream cracker.",
         alergenos: ["gluten"],
-        imagem: "imagens/suco_bolacha.jpg",
+        imagem: "sucobolacha.jpg",
         nutricional: {
           energia: { valor: "320 kcal", vd: "16%" },
           carboidratos: { valor: "65g", vd: "22%" },
@@ -744,6 +791,10 @@
       const cardapio = cardapioSemana[dia];
       
       if (cardapio) {
+        // Mostra o container do cardápio e esconde o aviso
+        document.getElementById('container-hoje').style.display = 'flex';
+        document.getElementById('container-futuro').style.display = 'none';
+        
         // Atualiza os elementos da página
         document.getElementById('merenda-prato').textContent = cardapio.prato;
         document.getElementById('merenda-descricao').textContent = cardapio.descricao;
@@ -818,6 +869,10 @@
             tabelaCorpo.appendChild(tr);
           });
         }
+      } else {
+        // Esconde o cardápio e mostra o aviso
+        document.getElementById('container-hoje').style.display = 'none';
+        document.getElementById('container-futuro').style.display = 'block';
       }
     }
 
@@ -828,6 +883,11 @@
       
       // Atualiza a data exibida
       document.getElementById('dataTexto').textContent = formatarData(hoje);
+      
+      // Marca todos os dias como futuros inicialmente
+      document.querySelectorAll('.dia-item').forEach(item => {
+        item.classList.add('futuro');
+      });
       
       // Verifica se o dia atual é um dia escolar (segunda a sexta)
       if (diaSemanaAtual === 'sabado' || diaSemanaAtual === 'domingo') {
@@ -845,6 +905,7 @@
         // Ativa o item do menu correspondente ao dia atual
         const itemAtivo = document.getElementById(`${diaSemanaAtual}-item`);
         if (itemAtivo) {
+          itemAtivo.classList.remove('futuro');
           itemAtivo.classList.add('ativo');
         }
         
@@ -856,16 +917,37 @@
           link.addEventListener('click', function(e) {
             e.preventDefault();
             
+            const diaSelecionado = this.getAttribute('data-dia');
+            const diaItem = this.parentElement;
+            
+            // Se for um dia futuro, não mostra detalhes
+            if (diaItem.classList.contains('futuro')) {
+              // Mostra mensagem de aviso
+              document.getElementById('container-hoje').style.display = 'none';
+              document.getElementById('container-futuro').style.display = 'block';
+              
+              // Remove a classe 'ativo' de todos os itens
+              document.querySelectorAll('.dia-item').forEach(item => {
+                item.classList.remove('ativo');
+                if (!item.classList.contains('futuro')) {
+                  item.classList.add('futuro');
+                }
+              });
+              
+              // Adiciona a classe 'ativo' ao item clicado
+              diaItem.classList.add('ativo');
+              return;
+            }
+            
             // Remove a classe 'ativo' de todos os itens
             document.querySelectorAll('.dia-item').forEach(item => {
               item.classList.remove('ativo');
             });
             
             // Adiciona a classe 'ativo' ao item clicado
-            this.parentElement.classList.add('ativo');
+            diaItem.classList.add('ativo');
             
             // Carrega o cardápio do dia selecionado
-            const diaSelecionado = this.getAttribute('data-dia');
             carregarCardapio(diaSelecionado);
           });
         });
@@ -902,4 +984,3 @@
   </script>
 </body>
 </html>
-          
